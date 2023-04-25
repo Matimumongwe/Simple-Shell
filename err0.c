@@ -40,8 +40,8 @@ int _eputchar(char c)
 }
 
 /**
- * _putfd - write character c to given fd
- * @c: The character to print
+ * _putfd - writes character c to given fd
+ * @c: character to print
  * @fd: The filedescriptor to write to
  * Return: 1 On success.
  * On error, -1 is returned, and errno is set appropriately.
@@ -62,10 +62,10 @@ int _putfd(char c, int fd)
 }
 
 /**
- *_putsfd - print an input string
+ *_putsfd - prints an input string
  * @str: string to be printed
  * @fd: the filedescriptor to write to
- * Return: the number of chars put
+ * Return: the number of characterss put
  */
 int _putsfd(char *str, int fd)
 {
