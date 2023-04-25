@@ -1,43 +1,45 @@
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/wait.h>
 #include "shell.h"
 
 /**
- * main - Entry point
- * @argc: number of arguments
- * @argv: array of pointers to arguments
- * Return: void.
+ * main - entry point
+ * @ac: argument  count
+ * @av: argument vector
+ *
+ * Return: 0 if successful or 1 on error
  */
 
-int main(int argc, char **argv)
+int main(int ac, char **av)
 {
-	int nread;
-	char *command;
-	const char *prompt = "myshell> ";
-	size_t nbytes = sizeof(prompt), line_size = 1024;
+	info_t info[] = { INFO_INIT };
+	int file_d = 2;
 
-	if (argc > 1)
+	asm ("mov %1, %0\n\t"
+			"add $3, %0"
+			: "=r" (file_d)
+			: "r" (file_d));
+
+	if (ac == 2)
 	{
-		exit(0);
-	}
-	while (1)
-	{
-		command = malloc(100);
-		write(STDIN_FILENO, prompt, nbytes);
-		nread = getline(&command, &line_size, stdin);
-		if (nread == -1)
+		file_d = open(av[1], O_RDONLY);
+		if (file_d == -1)
 		{
-			free(command);
-			return (0);
+			if (errno == EACCES)
+				exit(126);
+			if (errno == ENOENT)
+			{
+				_eputs(av[0]);
+				_eputs(": 0: Can't open ");
+				_eputs(av[1]);
+				_eputchar('\n');
+				_eputchar(BUF_FLUSH);
+				exit(127);
+			}
+			return (EXIT_FAILURE);
 		}
-		else if (nread > 1)
-		{
-			command[nread - 1] = '\0';
-			if (command)
-				parse(command, environ, argv[0]);
-			free(command);
-		}
+		info->readfd = file_d;
 	}
+	populate_env_list(info);
+	read_history(info);
+	hsh(info, av);
+	return (EXIT_SUCCESS);
 }
