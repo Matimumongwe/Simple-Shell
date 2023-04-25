@@ -2,7 +2,7 @@
 
 /**
  * _myenv - prints the current environment
- * @info: Structure containing potential arguments. Used to maintain
+ * @info: Structures the containing potential arguments.
  *          constant function prototype.
  * Return:  0
  */
@@ -12,7 +12,7 @@ int _myenv(info_t *info)
 	return (0);
 }
 /**
- * _getenv - gets the value of an environment variable
+ * _getenv - get the value of an environment variable
  * @info:Structure containing potential arguments. 
  * @name:env var name
  * Return:the value
